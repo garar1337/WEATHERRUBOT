@@ -1,6 +1,5 @@
 import telebot
 import requests
-import json
 
 """
 Погодный бот weathrubot.
@@ -75,9 +74,9 @@ def get_weather(message):
     отправляет погодные данные и соответствующее фото котенка.
     """
     city = message.text.strip()
-    data = fetch_weather(city)
+    data = collect_data(city)
     if data:
-        answer, description, temp = format_weather_response(city, data)
+        answer, description, temp = send_weather(city, data)
         image = select_image(description, temp)
 
         with open(image, "rb") as file:
