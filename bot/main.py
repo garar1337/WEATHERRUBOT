@@ -2,14 +2,20 @@ import telebot
 import requests
 import json
 
+"""
+Погодный бот weathrubot.
+Функционал:
+- принимает название города от пользователя,
+- получает данные о погоде через OpenWeatherMap API,
+- отправляет пользователю температуру, описание и картинку в зависимости от погоды.
+"""
+
 bot = telebot.TeleBot('8358485313:AAFzOy4z6_icHsshiuJYwt2rb8L4idjUnJg')
 API = '7307ddf3c705c122b60c8cd7f661b014'
 
-def fetch_weather(city):
+def collect_data(city):
     """
-    Обработчик команды /start.
-    Отправляет пользователю приветственное сообщение 
-    и инструкцию по использованию бота.
+    Получает текущие погодные данные для указанного города через OpenWeatherMap API.
     """
     url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API}&units=metric&lang=ru'
     res = requests.get(url)
@@ -17,15 +23,15 @@ def fetch_weather(city):
         return res.json()
     return None
 
-def format_weather_response(city, data):
+def send_weather(city, data):
     """
-    Обработчик текстовых сообщений.
+    Обработчик сообщений.
     Принимает название города, делает запрос к API OpenWeatherMap,
     получает текущие данные о погоде и отправляет пользователю:
     - Температуру
     - Ощущаемую температуру
     - Описание погоды
-    Также прикладывает соответствующую картинку в зависимости от погоды.
+    Также прикладывает соответствующую картинку котеночка в зависимости от погоды.
     """
     temp = round(data["main"]["temp"])
     feels = round(data["main"]["feels_like"])
@@ -66,7 +72,7 @@ def start(message):
 def get_weather(message):
     """
     Обработчик текстовых сообщений - принимает название города, запрашивает погоду,
-    отправляет погодные данные и соответствующее фото.
+    отправляет погодные данные и соответствующее фото котенка.
     """
     city = message.text.strip()
     data = fetch_weather(city)
@@ -84,6 +90,6 @@ def get_weather(message):
 
 """
 Запуск бота.
-Работает в бесконечном цикле и обрабатывает входящие сообщения.
+Работает в бесконечном цикле,благодаря чему бот не заканчивает работу и обрабатывает входящие сообщения.
 """
 bot.polling(none_stop=True)
