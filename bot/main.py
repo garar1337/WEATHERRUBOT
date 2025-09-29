@@ -1,18 +1,15 @@
 import telebot
 import requests
+import json
 
 bot = telebot.TeleBot('8358485313:AAFzOy4z6_icHsshiuJYwt2rb8L4idjUnJg')
 API = '7307ddf3c705c122b60c8cd7f661b014'
 
 def fetch_weather(city):
     """
-    Получает данные о погоде для указанного города через OpenWeatherMap API.
-    
-    Args:
-        city (str): Название города.
-        
-    Returns:
-        dict or None: JSON с данными о погоде, если запрос успешен, иначе None.
+    Обработчик команды /start.
+    Отправляет пользователю приветственное сообщение 
+    и инструкцию по использованию бота.
     """
     url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API}&units=metric&lang=ru'
     res = requests.get(url)
@@ -22,14 +19,13 @@ def fetch_weather(city):
 
 def format_weather_response(city, data):
     """
-    Формирует текст ответа для пользователя на основе данных о погоде.
-    
-    Args:
-        city (str): Название города.
-        data (dict): JSON с данными о погоде.
-        
-    Returns:
-        tuple: (текст ответа (str), описание погоды (str), температура (int))
+    Обработчик текстовых сообщений.
+    Принимает название города, делает запрос к API OpenWeatherMap,
+    получает текущие данные о погоде и отправляет пользователю:
+    - Температуру
+    - Ощущаемую температуру
+    - Описание погоды
+    Также прикладывает соответствующую картинку в зависимости от погоды.
     """
     temp = round(data["main"]["temp"])
     feels = round(data["main"]["feels_like"])
@@ -45,13 +41,6 @@ def format_weather_response(city, data):
 def select_image(description, temp):
     """
     Выбирает путь к изображению с котенком в зависимости от погоды.
-    
-    Args:
-        description (str): Описание погоды.
-        temp (int): Температура воздуха.
-        
-    Returns:
-        str: Путь к изображению.
     """
     desc_lower = description.lower()
     if "дожд" in desc_lower:
@@ -93,4 +82,8 @@ def get_weather(message):
             "😔 Не удалось найти такой город. Проверь правильность написания."
         )
 
+"""
+Запуск бота.
+Работает в бесконечном цикле и обрабатывает входящие сообщения.
+"""
 bot.polling(none_stop=True)
