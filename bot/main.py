@@ -9,7 +9,7 @@ import requests
 - отправляет пользователю температуру, описание и картинку в зависимости от погоды.
 """
 
-bot = telebot.TeleBot('8358485313:AAFzOy4z6_icHsshiuJYwt2rb8L4idjUnJg')
+bot = telebot.TeleBot('Сюда токен')
 API = '7307ddf3c705c122b60c8cd7f661b014'
 
 def collect_data(city):
